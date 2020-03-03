@@ -73,6 +73,10 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
+  onRouteChange = () => {
+    this.setState({route: 'home'});
+  }
+
 
   render() {
     return (
@@ -81,11 +85,15 @@ class App extends Component {
           params={particlesOptions}
         />
         <Navigation />
-        <Signin/>
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        { this.state.route === 'signin' 
+          ? <Signin onRouteChange={this.onRouteChange}/>
+          : <div>
+                <Logo />
+                <Rank />           
+                <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+                <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+           </div> 
+        }
       </div>
     );
   }
