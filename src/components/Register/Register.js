@@ -12,6 +12,9 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
+        window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku free '+
+        'leva algun tempo para subir o container contendo o servidor');
+
         fetch('https://guarded-wave-28569.herokuapp.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -21,15 +24,17 @@ class Register extends React.Component {
                 name: this.state.name
             })
         })
-        .then(response => response.json())
-        .then(user => { 
+        .then(response => {
+            response.json();
+        })
+        .then(user => {
             if(user.id) {
                 this.props.loadUser(user);
                 this.props.onRouteChange('home');
             }
-        });
+        }).catch(err=> window.alert("Algum dado errado, tente novamente!"));
     }
-        
+
     onNameChange = (event) => {
         this.setState({name: event.target.value});
     }
@@ -52,23 +57,23 @@ class Register extends React.Component {
                             <legend className="f1 fw6 ph0 mh0">Register</legend>
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
-                                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="text" 
-                                name="name" 
+                                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="text"
+                                name="name"
                                 id="name"
                                 onChange = {this.onNameChange} />
                             </div>
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="email" 
-                                name="email-address" 
+                                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="email"
+                                name="email-address"
                                 id="email-address"
                                 onChange = {this.onEmailChange} />
                             </div>
                             <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                                type="password" 
-                                name="password" 
+                                <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                                type="password"
+                                name="password"
                                 id="password"
                                 onChange = {this.onPasswordChange} />
                             </div>
