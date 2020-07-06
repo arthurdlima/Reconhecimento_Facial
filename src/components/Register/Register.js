@@ -12,8 +12,16 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
-        window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku free '+
-        'leva algun tempo para subir o container contendo o servidor');
+        if(this.state.password.length < 1 || this.state.name.length < 1 || this.state.email.length < 1 ) {
+            window.alert('Algum dado faltando! Tente novamente!')
+            return;
+        } else if (!this.state.email.includes('@')) {
+            window.alert('Email não está no formato correto!')
+            return;
+        } else {
+            window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku free '+
+            'leva algun tempo para subir o container contendo o servidor. Você será logado ao completar.');
+        }
 
         fetch('https://guarded-wave-28569.herokuapp.com/register', {
             method: 'post',
@@ -25,14 +33,21 @@ class Register extends React.Component {
             })
         })
         .then(response => {
-            response.json();
+            if(response.status != 200) {
+                window.alert('Dados incorreto ou usuário já cadastrado!');
+            } else {
+                return response.json();;
+            }
         })
         .then(user => {
+            if(user === undefined) {
+                return;
+            }
             if(user.id) {
                 this.props.loadUser(user);
                 this.props.onRouteChange('home');
             }
-        }).catch(err=> window.alert("Algum dado errado, tente novamente!"));
+        });
     }
 
     onNameChange = (event) => {

@@ -8,8 +8,8 @@ class Signin extends React.Component {
             signInPassword: ''
         };
     }
-        
-   
+
+
 
     onEmailChange = (event) => {
         this.setState({signInEmail: event.target.value});
@@ -20,6 +20,16 @@ class Signin extends React.Component {
     }
 
     onSubmitSignIn = () => {
+        if(this.state.signInEmail.length < 1 || this.state.signInPassword.length < 1) {
+            window.alert('Algum dado faltando! Tente novamente!')
+            return;
+        } else if (!this.state.signInEmail.includes('@')) {
+            window.alert('Email não está no formato correto!')
+            return;
+        } else {
+            window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku free '+
+            'leva algun tempo para subir o container contendo o servidor. Você será logado ao completar.');
+        }
         fetch('https://guarded-wave-28569.herokuapp.com/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -28,8 +38,17 @@ class Signin extends React.Component {
                 password: this.state.signInPassword
             })
         })
-        .then(response => response.json())
-        .then(user => { 
+        .then(response => {
+            if(response.status != 200) {
+                window.alert('Dados incorreto ou usuário já cadastrado!');
+            } else {
+                return response.json();;
+            }
+        })
+        .then(user => {
+            if(user === undefined) {
+                return;
+            }
             if(user.id) {
                 this.props.loadUser(user);
                 this.props.onRouteChange('home');
@@ -48,30 +67,30 @@ class Signin extends React.Component {
                             <legend className="f1 fw6 ph0 mh0">Sign In</legend>
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                                <input 
-                                className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                                type="email" name="email-address" 
-                                id="email-address" 
+                                <input
+                                className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                                type="email" name="email-address"
+                                id="email-address"
                                 onChange={this.onEmailChange}
                                 />
                             </div>
                             <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                <input 
-                                className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                                type="password" 
-                                name="password" 
-                                id="password" 
+                                <input
+                                className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                                type="password"
+                                name="password"
+                                id="password"
                                 onChange={this.onPasswordChange}
                                 />
                             </div>
                         </fieldset>
                         <div className="">
                             <input
-                                onClick={this.onSubmitSignIn} 
-                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
-                                type="submit" 
-                                value="Sign in" 
+                                onClick={this.onSubmitSignIn}
+                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
+                                type="submit"
+                                value="Sign in"
                             />
                         </div>
                         <div className="lh-copy mt3">
@@ -83,7 +102,7 @@ class Signin extends React.Component {
         );
 
     }
-    
+
 }
 
 export default Signin;
