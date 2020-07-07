@@ -27,7 +27,7 @@ class Signin extends React.Component {
             window.alert('Email não está no formato correto!')
             return;
         } else {
-            window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku free '+
+            window.alert('Por favor aguarde alguns segundos. Ao realizar a comunicação com o backend, Heroku gratis '+
             'leva algun tempo para subir o container contendo o servidor. Você será logado ao completar.');
         }
         fetch('https://guarded-wave-28569.herokuapp.com/signin', {
